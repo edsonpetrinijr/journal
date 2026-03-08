@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model JournalEntry {
+  id           String          @id @default(uuid())
+  date         DateTime        @default(now())
+  audioPath    String
+  transcript   String
+  mood         Int
+  sleepHours   Float
+  energy       Int
+  gym          Boolean
+  reading      Boolean
+  prayer       Boolean
+  deepWork     Boolean
+  createdAt    DateTime        @default(now())
+  summary      JournalSummary?
+}
+
+model JournalSummary {
+  id           String       @id @default(uuid())
+  entryId      String       @unique
+  entry        JournalEntry @relation(fields: [entryId], references: [id])
+  highlights   String       // Stored as JSON string (SQLite doesn't have JSON type, but Prisma can handle it if needed)
+  lessons      String       
+  improvements String       
+  nextActions  String       
+}
